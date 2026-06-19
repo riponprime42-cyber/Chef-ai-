@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "932799235014",
+    "project_id": "chefai-253af",
+    "storage_bucket": "chefai-253af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932799235014:android:6db8ab826987c21f0428c7",
+        "android_client_info": {
+          "package_name": "com.aistudio.chefai.pxgtyw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn4EIj8ewC9Zk5oRAT_XR6yE2IhvGilSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

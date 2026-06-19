@@ -1,0 +1,6 @@
+{
+  "name": "ChefAI",
+  "description": "Smart AI Recipe Generator app tailored to your available ingredients and preferences.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

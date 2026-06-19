@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer clean circular serving dish plate -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:pathData="M 54,20 A 34 34 0 1 1 53.9,20 Z" />
+    
+    <!-- Chef Hat main white puff -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 44,54 C 36,50 36,39 46,39 C 46,31 62,31 62,39 C 72,39 72,50 64,54 L 64,60 L 44,60 Z" />
+        
+    <!-- Chef Hat stylish primary base band -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M 46,62 L 62,62 C 63.1,62 64,62.9 64,64 L 64,67 C 64,68.1 63.1,69 62,69 L 46,69 C 44.9,69 44,68.1 44,67 L 44,64 C 44,62.9 44.9,62 46,62 Z" />
+</vector>
