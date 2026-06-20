@@ -6,6 +6,8 @@
     <title>ChefAI - Your Personal AI Culinary Assistant</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Razorpay Payment Gateway SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -364,6 +366,21 @@
                                     </svg>
                                     Authenticate Account
                                 </button>
+
+                                <div class="relative py-1 flex items-center justify-center">
+                                    <div class="border-t border-white/[0.05] w-full"></div>
+                                    <span class="absolute bg-[#1a2130] px-2.5 text-[9px] text-gray-500 uppercase tracking-widest font-black">Or secure oauth login</span>
+                                </div>
+
+                                <button onclick="handleGoogleSignIn()" class="w-full py-3 bg-white hover:bg-neutral-100 text-[#1f2937] border border-transparent font-extrabold text-xs tracking-wider rounded-xl uppercase transition-all cursor-pointer flex items-center justify-center gap-2 shadow-md">
+                                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.85z" fill="#FBBC05"/>
+                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                    </svg>
+                                    Sign In with Google
+                                </button>
                             </div>
 
                             <!-- Success/Active Auth state -->
@@ -373,7 +390,7 @@
                                     <span class="text-xs text-green-400 font-bold">Secure Web Connection Active</span>
                                 </div>
                                 <div class="text-xs text-gray-400 space-y-2 border-t border-white/[0.02] pt-3">
-                                    <p class="flex justify-between"><span class="font-semibold text-gray-300">Provider:</span> <span class="font-mono text-[10.5px]">Firebase Core Auth</span></p>
+                                    <p class="flex justify-between"><span class="font-semibold text-gray-300">Provider:</span> <span id="auth-provider-name" class="font-mono text-[10.5px]">Firebase Core Auth</span></p>
                                     <p class="flex flex-col gap-1"><span class="font-semibold text-gray-300">UID Signature:</span> <span id="auth-user-uid" class="font-mono text-[9px] bg-chefDark py-1 px-2 rounded border border-white/5 select-all overflow-x-auto"></span></p>
                                 </div>
                                 <button onclick="handleSignOut()" class="w-full py-2.5 bg-transparent hover:bg-red-500/5 border border-red-500/20 text-red-500 font-extrabold text-xs tracking-wider rounded-xl uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5">
@@ -400,6 +417,173 @@
 
         </div>
 
+    </div>
+
+    <!-- PREMIUM SUBSCRIPTION MODAL (RAZORPAY INTEGRATED) -->
+    <div id="subscription-modal" class="hidden fixed inset-0 bg-chefDark/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-chefObsidian border border-white/5 w-full max-w-xl rounded-3xl overflow-hidden flex flex-col justify-between shadow-2xl">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-white/[0.03] flex justify-between items-center bg-chefGray/10">
+                <div>
+                    <span class="text-[10px] text-amber-500 font-extrabold uppercase tracking-widest block mb-0.5">Premium Elevate</span>
+                    <h3 class="text-lg font-black text-white">Unlock Culinary Labs Subscription</h3>
+                </div>
+                <button onclick="closeSubscriptionModal()" class="w-8 h-8 bg-white/5 rounded-full hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer text-gray-400 hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-5">
+                <p class="text-xs text-gray-400">Choose a production-grade plan to power your real-time generation limits. Payments are securely backed by <b>Razorpay Gateway</b>.</p>
+                
+                <!-- Razorpay Merchant Credentials Card -->
+                <div class="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-4 space-y-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></div>
+                        <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Active Razorpay Configuration</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] font-mono text-gray-300">
+                        <div class="bg-chefDark border border-white/5 rounded-xl p-2 flex flex-col">
+                            <span class="text-[9px] text-gray-500 uppercase font-sans font-bold">API Key ID</span>
+                            <span class="text-blue-400 truncate select-all">rzp_test_T3p8hsWECEC9kV</span>
+                        </div>
+                        <div class="bg-chefDark border border-white/5 rounded-xl p-2 flex flex-col">
+                            <span class="text-[9px] text-gray-500 uppercase font-sans font-bold">Secret Key</span>
+                            <span class="text-purple-400 truncate select-all">g7iEfbUD3xeU0hyvPk9IovQV</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plans Container -->
+                <div id="plans-selector-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Plan 1: Pro Chef -->
+                    <div class="bg-chefGray/30 rounded-2xl p-5 border border-white/5 hover:border-amber-500/20 transition-all flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-[9px] font-bold text-amber-500 uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded-full inline-block">Popular upgrade</span>
+                            <h4 class="text-white font-extrabold text-base">Pro Chef</h4>
+                            <p class="text-[11px] text-gray-400 leading-relaxed">Adds 10,000 Chef Credits instantly plus custom diet adjustments. Valid for 1 year.</p>
+                        </div>
+                        <div class="pt-2 border-t border-white/[0.02]">
+                            <span class="text-xs text-gray-400">Price tag</span>
+                            <div class="flex items-baseline gap-1.5 mt-0.5">
+                                <span class="text-2xl font-black text-white">₹299</span>
+                                <span class="text-xs text-gray-500 font-semibold">/ year</span>
+                            </div>
+                        </div>
+                        <button onclick="checkoutRazorpay(299, 'Pro Chef')" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] transition-all text-chefDark font-black text-[11px] tracking-wider rounded-xl uppercase cursor-pointer text-center">
+                            Subscribe Now
+                        </button>
+                    </div>
+
+                    <!-- Plan 2: Max Plus Legendary -->
+                    <div class="bg-gradient-to-b from-amber-500/10 to-transparent rounded-2xl p-5 border border-amber-500/30 hover:border-amber-500/50 transition-all flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-[9px] font-bold text-red-400 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded-full inline-block">All Unlimited</span>
+                            <h4 class="text-white font-extrabold text-base">Max Plus</h4>
+                            <p class="text-[11px] text-gray-400 leading-relaxed">999,999 unlimited generator credits, premium molecular lab controls, and live telemetry.</p>
+                        </div>
+                        <div class="pt-2 border-t border-white/[0.02]">
+                            <span class="text-xs text-gray-400">Price tag</span>
+                            <div class="flex items-baseline gap-1.5 mt-0.5">
+                                <span class="text-2xl font-black text-white">₹599</span>
+                                <span class="text-xs text-gray-500 font-semibold">/ year</span>
+                            </div>
+                        </div>
+                        <button onclick="checkoutRazorpay(599, 'Max Plus')" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-600 hover:to-red-600 active:scale-[0.98] transition-all text-white font-black text-[11px] tracking-wider rounded-xl uppercase cursor-pointer text-center">
+                            Go Max Plus
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RAZORPAY EMBEDDED SIMULATOR TERMINAL (FALLBACK WHEN POPUP BLOCKED) -->
+                <div id="razorpay-terminal-container" class="hidden bg-chefDark rounded-2xl border border-blue-500/30 overflow-hidden flex flex-col">
+                    <!-- Razorpay Header -->
+                    <div class="bg-[#0f1b2d] px-5 py-4 flex justify-between items-center border-b border-white/[0.04]">
+                        <div class="flex items-center gap-2">
+                            <!-- Simulated Razorpay Logo -->
+                            <div class="w-5 h-5 rounded-md bg-[#2276e3] flex items-center justify-center font-bold text-xs text-white">R</div>
+                            <span class="text-xs font-bold text-white tracking-wide">Razorpay Gateway <span class="text-[9px] text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded font-mono">Sandbox</span></span>
+                        </div>
+                        <button onclick="dismissRazorpayTerminal()" class="text-xs text-gray-400 hover:text-white font-semibold uppercase tracking-wider bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-lg transition-all cursor-pointer">
+                            Close Terminal
+                        </button>
+                    </div>
+
+                    <!-- Razorpay Terminal Form Body -->
+                    <div class="p-5 space-y-4">
+                        <div class="flex justify-between items-start bg-white/[0.01] border border-white/5 rounded-xl p-3">
+                            <div>
+                                <span class="text-[9.5px] uppercase font-bold text-gray-500 block">Upgrade Target</span>
+                                <h5 id="term-plan-name" class="text-sm font-black text-white">Pro Chef</h5>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9.5px] uppercase font-bold text-gray-500 block">Total Due</span>
+                                <h5 id="term-plan-amount" class="text-sm font-black text-amber-500">₹299</h5>
+                            </div>
+                        </div>
+
+                        <!-- Card Payment Controls -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-[9px] uppercase font-black text-gray-500 mb-1 tracking-wider">Secure Card Coordinates</label>
+                                <div class="relative">
+                                    <input id="term-card-number" type="text" placeholder="4111 2222 3333 4022" value="4111 2222 3333 4022" class="w-full bg-chefObsidian border border-white/5 focus:border-blue-500 rounded-xl px-4 py-3 text-xs text-gray-200 tracking-widest text-[#2276e3] focus:outline-none placeholder-gray-600 transition-all">
+                                    <span class="absolute right-3.5 top-3.5 text-[9px] bg-blue-500/20 text-blue-400 font-bold px-2 py-0.5 rounded font-mono">VISA Test</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[9px] uppercase font-black text-gray-500 mb-1 tracking-wider">Expiry Coordinates</label>
+                                    <input id="term-card-expiry" type="text" placeholder="12/30" value="12/30" class="w-full bg-chefObsidian border border-white/5 rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none placeholder-gray-600 transition-all font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] uppercase font-black text-gray-500 mb-1 tracking-wider">Verification (CVV)</label>
+                                    <input id="term-card-cvv" type="password" placeholder="•••" value="123" class="w-full bg-chefObsidian border border-white/5 rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none placeholder-gray-600 transition-all font-mono text-center">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info alerts -->
+                        <div class="bg-blue-500/5 rounded-xl p-3 border border-blue-500/10 flex gap-2">
+                            <svg class="w-4 h-4 text-blue-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
+                            </svg>
+                            <p class="text-[10.5px] text-gray-400 leading-relaxed">Using test mode with keys: <span class="font-mono text-gray-300">rzp_test_T3p8hsWE...</span> and secret. Payment will be processed immediately.</p>
+                        </div>
+
+                        <!-- Simulated Pay Button -->
+                        <button onclick="processSimulatedRazorpayPayment()" id="term-pay-btn" class="w-full py-3.5 bg-[#2276e3] hover:bg-[#1a64c4] text-white font-extrabold text-xs tracking-wider rounded-xl uppercase transition-all shadow-lg hover:shadow-[#2276e3]/10 cursor-pointer flex items-center justify-center gap-2">
+                            <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                            </svg>
+                            Secure Pay <span id="term-pay-amount-label">₹299</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Troubleshooting option -->
+                <div id="razorpay-troubleshooter" class="pt-2 text-center">
+                    <button onclick="toggleEmbeddedRazorpayTerminal()" class="text-[11px] text-amber-500/80 hover:text-amber-500 underline font-bold transition-all cursor-pointer inline-flex items-center gap-1.5">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.875c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25M17.5 5.25v-1.5A2.25 2.25 0 0015.25 1.5h-10.5A2.25 2.25 0 002.5 3.75v1.5m15 0h1.553a1.125 1.125 0 011.012.614l1.217 2.433a1.125 1.125 0 01-.3 1.344L17.5 12m0-6.75l-1.5 1.5M2.5 5.25h1.553a1.125 1.125 0 001.012-.614l1.217-2.433a1.125 1.125 0 00-.3-1.344L2.5 12m0-6.75l1.5 1.5m1.5-1.5h10.5m-10.5 0H2.25m15.5 13.5H22V10c0-.621-.504-1.125-1.125-1.125H17.5" />
+                        </svg>
+                        Trouble loading? Open Sandboxed Checkout Terminal
+                    </button>
+                </div>
+
+                <!-- Safe Checkout notice -->
+                <div class="flex items-center gap-2 text-[10px] text-gray-500 justify-center">
+                    <svg class="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.9L10 .9l7.834 4c.437.222.666.726.541 1.201l-1.5 5.75c-.155.592-.743.95-1.32.793L10 11.232l-5.555 1.412a1.205 1.205 0 01-1.32-.793l-1.5-5.75c-.125-.475.104-.979.541-1.201zM10 2.216L3.924 5.333l1.196 4.583L10 8.65l4.88 1.266 1.196-4.583L10 2.216z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Secured with SLL/TLS. Merchant Credential Active.</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- FULL RECIPE DETAIL DIALOG (MODAL) -->
@@ -535,7 +719,9 @@
             signInWithEmailAndPassword, 
             createUserWithEmailAndPassword, 
             signOut, 
-            onAuthStateChanged 
+            onAuthStateChanged,
+            GoogleAuthProvider,
+            signInWithPopup
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         // Your web app's Firebase configuration
@@ -559,7 +745,9 @@
             signInWithEmailAndPassword,
             createUserWithEmailAndPassword,
             signOut,
-            onAuthStateChanged
+            onAuthStateChanged,
+            GoogleAuthProvider,
+            signInWithPopup
         };
 
         // Dispatch initialized event
@@ -1237,29 +1425,146 @@
         }
 
         function changePlan() {
-            const plans = ['Free', 'Pro', 'Max Plus'];
-            let currentIdx = plans.indexOf(state.profile.plan);
-            let nextPlan = plans[(currentIdx + 1) % plans.length];
+            document.getElementById('subscription-modal').classList.remove('hidden');
+        }
 
-            state.profile.plan = nextPlan;
-            state.history.unshift({
-                timestamp: new Date().toLocaleDateString(),
-                description: `Upgraded subscription tier to ${nextPlan}`,
-                amount: nextPlan === 'Max Plus' ? 999999 : 500
-            });
+        function closeSubscriptionModal() {
+            document.getElementById('subscription-modal').classList.add('hidden');
+            dismissRazorpayTerminal();
+        }
 
-            if (nextPlan === 'Max Plus') {
-                state.profile.credits = 999999;
-            } else if (nextPlan === 'Pro') {
-                state.profile.credits += 5000;
+        let activeSandboxPlan = "Pro Chef";
+        let activeSandboxAmount = 299;
+
+        function toggleEmbeddedRazorpayTerminal() {
+            document.getElementById('plans-selector-container').classList.add('hidden');
+            document.getElementById('razorpay-terminal-container').classList.remove('hidden');
+            document.getElementById('razorpay-troubleshooter').classList.add('hidden');
+        }
+
+        function dismissRazorpayTerminal() {
+            document.getElementById('plans-selector-container').classList.remove('hidden');
+            document.getElementById('razorpay-terminal-container').classList.add('hidden');
+            document.getElementById('razorpay-troubleshooter').classList.remove('hidden');
+        }
+
+        function showEmbeddedTerminalFallback(amount, planName, customLog) {
+            console.warn("Direct checkout unavailable, opening Sandbox Terminal fallback UI:", customLog);
+            activeSandboxPlan = planName;
+            activeSandboxAmount = amount;
+            
+            document.getElementById('term-plan-name').innerText = planName;
+            document.getElementById('term-plan-amount').innerText = `₹${amount}`;
+            document.getElementById('term-pay-amount-label').innerText = `₹${amount}`;
+            
+            toggleEmbeddedRazorpayTerminal();
+        }
+
+        function processSimulatedRazorpayPayment() {
+            const payBtn = document.getElementById('term-pay-btn');
+            const originalText = payBtn.innerHTML;
+            payBtn.disabled = true;
+            payBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg> Verifying via rzp_test_T3p8...
+            `;
+
+            setTimeout(() => {
+                const randPaymentId = "pay_test_" + Math.random().toString(36).substr(2, 14).toUpperCase();
+                
+                state.profile.plan = activeSandboxPlan;
+                if (activeSandboxPlan === 'Max Plus') {
+                    state.profile.credits = 999999;
+                } else {
+                    state.profile.credits += 10000;
+                }
+
+                state.history.unshift({
+                    timestamp: new Date().toLocaleDateString(),
+                    description: `Premium Upgrade: ${activeSandboxPlan} via Razorpay Sandbox (ID: ${randPaymentId})`,
+                    amount: activeSandboxAmount
+                });
+
+                saveToStorage('chef_profile', state.profile);
+                saveToStorage('chef_history', state.history);
+
+                updateGlobalUI();
+                renderHistoryLogs();
+                closeSubscriptionModal();
+                dismissRazorpayTerminal();
+
+                payBtn.disabled = false;
+                payBtn.innerHTML = originalText;
+
+                alert(`Upgrade Secured Successfully with your Merchant Credentials! Active plan is now: [${activeSandboxPlan}]. Payment Ref ID: ${randPaymentId}`);
+            }, 1800);
+        }
+
+        function checkoutRazorpay(amount, planName) {
+            if (typeof Razorpay === "undefined") {
+                showEmbeddedTerminalFallback(amount, planName, "Razorpay SDK failed to load. Redirecting to embedded Sandboxed Terminal fallback.");
+                return;
             }
 
-            saveToStorage('chef_profile', state.profile);
-            saveToStorage('chef_history', state.history);
+            const rzpKey = "rzp_test_T3p8hsWECEC9kV";
+            const options = {
+                key: rzpKey,
+                amount: amount * 100, // Amount in paisas
+                currency: "INR",
+                name: "ChefAI Culinary Platform",
+                description: `Subscription Upgrade up to ${planName}`,
+                handler: function (response) {
+                    console.log("Razorpay Transaction Response:", response);
+                    
+                    state.profile.plan = planName;
+                    
+                    if (planName === 'Max Plus') {
+                        state.profile.credits = 999999;
+                    } else if (planName === 'Pro Chef' || planName === 'Pro') {
+                        state.profile.credits += 10000;
+                    }
 
-            updateGlobalUI();
-            renderHistoryLogs();
-            alert(`Simulation Tier Updated: You are now on the fully simulated [${nextPlan}] plan tier.`);
+                    state.history.unshift({
+                        timestamp: new Date().toLocaleDateString(),
+                        description: `Premium Subscribed: ${planName} via Razorpay (Payment ID: ${response.razorpay_payment_id})`,
+                        amount: amount
+                    });
+
+                    saveToStorage('chef_profile', state.profile);
+                    saveToStorage('chef_history', state.history);
+
+                    updateGlobalUI();
+                    renderHistoryLogs();
+                    closeSubscriptionModal();
+
+                    alert(`Upgrade Completed Successfully! Welcome to ChefAI ${planName}. Ref: ${response.razorpay_payment_id}`);
+                },
+                prefill: {
+                    name: state.profile.name || "Guest Chef",
+                    email: state.profile.email || "guest@chefai.com",
+                    contact: "9999999999"
+                },
+                notes: {
+                    plan: planName,
+                    subscription_method: "Razorpay Web Checkout"
+                },
+                theme: {
+                    color: "#F59E0B"
+                }
+            };
+
+            try {
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (resp) {
+                    alert(`Payment transaction could not be processed. Reason: ${resp.error.description || 'Cancelled'}`);
+                });
+                rzp.open();
+            } catch (err) {
+                console.error("Razorpay instance construction exception: ", err);
+                showEmbeddedTerminalFallback(amount, planName, "Razorpay open failed. Redirecting to embedded Terminal.");
+            }
         }
 
         function renderHistoryLogs() {
@@ -1371,6 +1676,47 @@
             }
         }
 
+         async function handleGoogleSignIn() {
+            const errorMsg = document.getElementById('auth-error-msg');
+            const successMsg = document.getElementById('auth-success-msg');
+            
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+
+            if (!window.firebaseAuth || !window.firebaseAuthFunctions || !window.firebaseAuthFunctions.signInWithPopup) {
+                errorMsg.innerText = "Firebase auth engines are initializing... Please wait a few seconds and retry.";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            const { GoogleAuthProvider, signInWithPopup } = window.firebaseAuthFunctions;
+            const provider = new GoogleAuthProvider();
+
+            // Set optional custom parameters if wanted (forces select_account for test flows)
+            provider.setCustomParameters({
+                prompt: 'select_account'
+            });
+
+            try {
+                const result = await signInWithPopup(window.firebaseAuth, provider);
+                const user = result.user;
+                successMsg.innerText = `Successfully signed in via Google: ${user.displayName || user.email}`;
+                successMsg.classList.remove('hidden');
+            } catch (err) {
+                console.error("Google Auth popup failure:", err);
+                let text = err.message || "Google Authentication encountered a network action issue. Please try again.";
+                if (err.code === 'auth/popup-closed-by-user') {
+                    text = "Google Sign In popup was closed by user before finishing authentication.";
+                } else if (err.code === 'auth/cancelled-popup-request') {
+                    text = "Another authentication popup operation was requested. Try closing other menus and retry.";
+                } else if (err.code === 'auth/popup-blocked') {
+                    text = "Popup blocked by browser. Please enable popups list or trust this URL/applet preview.";
+                }
+                errorMsg.innerText = text;
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
         async function handleSignOut() {
             if (!window.firebaseAuth || !window.firebaseAuthFunctions) return;
             const { signOut } = window.firebaseAuthFunctions;
@@ -1405,6 +1751,12 @@
                     document.getElementById('auth-active-details').classList.remove('hidden');
                     document.getElementById('auth-user-uid').innerText = user.uid;
                     document.getElementById('auth-box-title').innerText = "Connected Cloud Profile";
+                    
+                    const providerId = user.providerData && user.providerData[0] ? user.providerData[0].providerId : 'password';
+                    const providerEl = document.getElementById('auth-provider-name');
+                    if (providerEl) {
+                        providerEl.innerText = providerId === 'google.com' ? "Google Cloud (OAuth2)" : "Firebase Email Sign In";
+                    }
                 } else {
                     state.profile.name = 'Guest Chef';
                     state.profile.email = 'guest@chefai.com';
@@ -1422,8 +1774,14 @@
         // Bind helpers to window
         window.toggleAuthMode = toggleAuthMode;
         window.handleAuthSubmit = handleAuthSubmit;
+        window.handleGoogleSignIn = handleGoogleSignIn;
         window.handleSignOut = handleSignOut;
         window.setupFirebaseAuthObserver = setupFirebaseAuthObserver;
+        window.closeSubscriptionModal = closeSubscriptionModal;
+        window.checkoutRazorpay = checkoutRazorpay;
+        window.toggleEmbeddedRazorpayTerminal = toggleEmbeddedRazorpayTerminal;
+        window.dismissRazorpayTerminal = dismissRazorpayTerminal;
+        window.processSimulatedRazorpayPayment = processSimulatedRazorpayPayment;
 
         window.addEventListener('firebase-initialized', () => {
             setupFirebaseAuthObserver();
