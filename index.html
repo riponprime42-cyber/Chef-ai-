@@ -58,6 +58,31 @@
 </head>
 <body class="text-gray-200 antialiased min-h-screen flex flex-col justify-between selection:bg-amber-500/30 selection:text-white">
 
+    <!-- BLOCK TAKE OVER OVERLAY -->
+    <div id="block-screen-takeover" class="hidden fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#0d1117] p-6 text-center select-none">
+        <div class="max-w-md bg-chefObsidian border border-red-500/30 rounded-3xl p-8 space-y-6 shadow-2xl shadow-red-900/10">
+            <div class="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto animate-bounce">
+                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                </svg>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-2xl font-black text-white uppercase tracking-tight">Access Restricted</h3>
+                <p id="block-message-content" class="text-sm text-red-400 font-extrabold leading-normal bg-red-500/5 p-4 border border-red-500/10 rounded-2xl">
+                    48 hours wait your account has blocked please wait.
+                </p>
+                <p class="text-[11px] text-gray-400 mt-2">
+                    Security protocols have detected a policy violation or active block request placed by the administration of ChefAI.
+                </p>
+            </div>
+            <div class="pt-3 border-t border-white/5">
+                <button onclick="handleBlockSignOut()" class="w-full py-3 bg-white/5 hover:bg-white/10 hover:text-red-400 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2">
+                    Disconnect Session / Login Options
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Top Glow Effect -->
     <div class="absolute top-0 left-0 right-0 h-[500px] hero-gradient pointer-events-none z-0"></div>
 
@@ -327,9 +352,10 @@
                                 <button onclick="changePlan()" class="w-full py-2.5 px-4 bg-white/5 border border-white/10 text-white font-bold text-xs rounded-xl hover:bg-white/10 active:scale-[0.98] transition-all tracking-wide uppercase cursor-pointer">
                                     Upgrade Plan / Simulation Tier
                                 </button>
-                                <button onclick="refillCredits()" class="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-600 text-chefDark font-bold text-xs rounded-xl active:scale-[0.98] transition-all tracking-wide uppercase cursor-pointer">
-                                    Claim Daily Credits (+1,000)
-                                </button>
+                                <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-3 text-center">
+                                    <span class="text-[10px] text-amber-400 font-extrabold uppercase tracking-wider block">🔒 SignUp Exclusive Credits</span>
+                                    <span class="text-[10.5px] text-gray-400 leading-normal block mt-1">Get 2,000 Chef Credits instantly upon signing up. No daily claims required!</span>
+                                </div>
                             </div>
                         </div>
 
@@ -353,6 +379,13 @@
                                 <div>
                                     <label class="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">Access Token / Password</label>
                                     <input id="auth-password-input" type="password" placeholder="••••••••" class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl px-4 py-2.5 text-xs text-gray-200 focus:outline-none transition-all">
+                                </div>
+
+                                <div class="flex items-center gap-2 text-[11px] text-gray-400 mt-2 py-1.5 bg-white/[0.01] px-3.5 rounded-xl border border-white/5">
+                                    <input type="checkbox" id="privacy-agreement-chk" checked class="w-3.5 h-3.5 accent-amber-500 rounded border-white/10 bg-chefDark cursor-pointer">
+                                    <label for="privacy-agreement-chk" class="cursor-pointer select-none text-[10.5px]">
+                                        I read and agree to follow the <span class="text-amber-500 font-bold hover:underline" onclick="event.preventDefault(); openPrivacyModal();">Privacy Policy</span>.
+                                    </label>
                                 </div>
 
                                 <div class="flex justify-between items-center text-[10px] text-gray-400 pt-0.5">
@@ -706,10 +739,365 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="relative z-10 w-full py-8 text-center text-[10px] text-gray-600 border-t border-white/[0.03] bg-chefDark">
-        <p>&copy; 2026 ChefAI Android Application Platform. Built client-side for immediate kitchen lookups. Premium Design Concept.</p>
+    <!-- FOOTER WITH UTILITIES -->
+    <footer class="relative z-10 w-full py-8 text-center border-t border-white/[0.03] bg-chefDark space-y-4">
+        <div class="flex items-center justify-center gap-6 text-[11px] text-gray-400 font-extrabold uppercase tracking-wider">
+            <button onclick="openFeedbackModal()" class="hover:text-amber-500 transition-all cursor-pointer flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.277 3.42.333a12.8 12.8 0 003.5.03c1.229-.126 2.433-.377 3.593-.747a3.078 3.078 0 001.996-2.031c.361-1.124.582-2.321.657-3.557a14.802 14.802 0 00-.022-3.419M3.75 14.25v2.25c0 .414.336.75.75.75H6.75"/>
+                </svg>
+                Feedback &amp; Bugs
+            </button>
+            <span class="text-white/[0.05] font-normal">|</span>
+            <button onclick="openPrivacyModal()" class="hover:text-amber-500 transition-all cursor-pointer flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                </svg>
+                Privacy Policy
+            </button>
+            <span class="text-white/[0.05] font-normal">|</span>
+            <button onclick="openAdminLoginModal()" class="hover:text-amber-500 transition-all cursor-pointer flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                </svg>
+                Admin Panel
+            </button>
+        </div>
+        <p class="text-[10px] text-gray-600">&copy; 2026 ChefAI Android Application Platform. Built client-side for immediate kitchen lookups. Premium Design Concept.</p>
     </footer>
+
+    <!-- FEEDBACK DIALOG (MODAL) -->
+    <div id="feedback-modal" class="hidden fixed inset-0 bg-chefDark/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-chefObsidian border border-white/5 w-full max-w-md rounded-3xl p-6 space-y-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-xl font-extrabold text-white">Give Us Feedback</h3>
+                    <p class="text-xs text-gray-400">Help us polish our smart recipe platform</p>
+                </div>
+                <button onclick="closeFeedbackModal()" class="w-8 h-8 bg-white/5 rounded-full hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer text-gray-400 hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-500 mb-2">Category</label>
+                    <select id="feedback-category" class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl px-4 py-3 text-sm focus:outline-none transition-all text-gray-200">
+                        <option value="Bug">Bug Report</option>
+                        <option value="Suggestion / Error">Suggestion &amp; Error Feedback</option>
+                        <option value="More...">More / General Feedback</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-500 mb-2">Your Email</label>
+                    <input id="feedback-email" placeholder="email@address.com" type="email"
+                           class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl px-4 py-3 text-sm focus:outline-none transition-all text-gray-200">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-amber-500 mb-2">Message</label>
+                    <textarea id="feedback-message" rows="4" placeholder="Enter your feedback, error description, or bug details here..."
+                              class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl p-4 text-sm focus:outline-none transition-all text-gray-200 resize-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="submitFeedback()" class="py-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-chefDark font-extrabold text-xs tracking-wider rounded-xl uppercase transition-all cursor-pointer">
+                        Submit
+                    </button>
+                    <button onclick="closeFeedbackModal()" class="py-3 bg-chefGray hover:bg-chefGrayLight text-white font-bold text-xs rounded-xl uppercase transition-all cursor-pointer">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRIVACY POLICY DIALOG (MODAL) -->
+    <div id="privacy-modal" class="hidden fixed inset-0 bg-chefDark/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-chefObsidian border border-white/5 w-full max-w-2xl rounded-3xl p-6 flex flex-col max-h-[85vh] space-y-4">
+            <div class="flex justify-between items-start shrink-0">
+                <div>
+                    <h3 class="text-xl font-extrabold text-white">Privacy Policy</h3>
+                    <p class="text-xs text-amber-500">Effective Date: June 20, 2026</p>
+                </div>
+                <button onclick="closePrivacyModal()" class="w-8 h-8 bg-white/5 rounded-full hover:bg-white/10 transition-all flex items-center justify-center cursor-pointer text-gray-400 hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Scrollable Content Body -->
+            <div class="overflow-y-auto pr-2 space-y-4 text-xs text-gray-300 leading-relaxed custom-scroll">
+                <p>Welcome to ChefAI – Smart Recipe Generator ("we," "our," or "us"). This Privacy Policy explains how we collect, use, disclose, and protect your information when you use our mobile application and related services.</p>
+                <p>By accessing or using the app, you agree to the practices described in this Privacy Policy.</p>
+                
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">1. Information We Collect</h4>
+                <div class="space-y-2">
+                    <p class="font-bold text-amber-400/80">Account Information</p>
+                    <p class="pl-3">When you create an account, we may collect:</p>
+                    <ul class="list-disc pl-6 space-y-1">
+                        <li>Full name</li>
+                        <li>Email address</li>
+                        <li>Profile photo (if you sign in with Google)</li>
+                        <li>Authentication credentials</li>
+                    </ul>
+                </div>
+                <div class="space-y-2">
+                    <p class="font-bold text-amber-400/80">User Content</p>
+                    <p class="pl-3">We collect information you provide when using the app, including:</p>
+                    <ul class="list-disc pl-6 space-y-1">
+                        <li>Recipe searches, Favorite recipes, and Shopping lists</li>
+                        <li>AI recipe generation prompts and Generated recipes</li>
+                        <li>User preferences and settings</li>
+                    </ul>
+                </div>
+                <div class="space-y-2">
+                    <p class="font-bold text-amber-400/80">Subscription and Payment Information</p>
+                    <p class="pl-3">Payments are processed securely through third-party payment providers. We do not store your complete payment card details. We may collect subscription plan information, transaction history, and credit usage.</p>
+                </div>
+                <div class="space-y-2">
+                    <p class="font-bold text-amber-400/80">Device and Usage Information</p>
+                    <p class="pl-3">We may automatically collect device type, operating system version, app version, IP address, device identifiers, and usage analytics.</p>
+                </div>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">2. How We Use Your Information</h4>
+                <p>We use your information to create/manage your account, authenticate users, provide recipe recommenders, generate AI-powered recipes, process upgrades, communicate help logs, and prevent fraud.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">3. AI Features</h4>
+                <p>When you use the AI recipe generator, prompts and information you submit may be processed by trusted AI providers to generate recommendations. Please do not insert highly sensitive personal details in your AI prompts.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">4. Third-Party Services</h4>
+                <p>We leverage services like Google Sign-In for authentication, Firebase Cloud Services, OpenAI/Gemini models, and Razorpay/Stripe payment gateways. They operate under their respective and verified privacy boundaries.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">5. Data Sharing</h4>
+                <p>We do not sell your personal information. We may share information only with providers who optimize operations, comply with laws, or handle secure payment actions.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">6. Data Retention</h4>
+                <p>We retain your information as long as necessary to fulfill services or legal mandates. You can request account &amp; data deletion operations at any time.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">7. Data Security</h4>
+                <p>We install administrative, technical, and structural safe guards. Note that no internet transfer or storage mechanism is completely immune to risks.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">8. Your Rights</h4>
+                <p>Depending on location, you can request data access, correction, deletion, or portability. Contact us to execute your rights.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">9. Children's Privacy</h4>
+                <p>The app isn't designed for children under 13. If you believe a child loaded personal information, send us details to wipe it secure.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">10. International Data Transfers</h4>
+                <p>Information may cross regional bounds to trusted server configurations. We manage compliance standards during transfer operations.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">11. Changes to This Privacy Policy</h4>
+                <p>We will notify users of updates by changing the effective date or posting app alerts.</p>
+
+                <h4 class="font-bold text-sm text-white pt-2 border-b border-white/5 pb-1">12. Contact Us</h4>
+                <p class="bg-chefDark border border-white/5 p-3 rounded-xl">
+                    <span class="block font-semibold">Email: <a href="mailto:alvi41545@gmail.com" class="text-amber-400 hover:underline">alvi41545@gmail.com</a></span>
+                </p>
+            </div>
+
+            <!-- Footer block -->
+            <div class="pt-2 border-t border-white/5 flex justify-end shrink-0">
+                <button onclick="closePrivacyModal()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-chefDark font-extrabold text-xs tracking-wider rounded-xl uppercase transition-all cursor-pointer">
+                    Dismiss
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN (MODAL) -->
+    <div id="admin-login-modal" class="hidden fixed inset-0 bg-chefDark/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-chefObsidian border border-white/5 w-full max-w-sm rounded-3xl p-6 space-y-5">
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto">
+                    <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                    </svg>
+                </div>
+                <h3 class="text-sm font-extrabold text-white">Culinary Command Console</h3>
+                <p class="text-[10px] text-gray-400">Please authenticate with credentials</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] uppercase font-black tracking-wider text-gray-500 mb-1.5">Admin Email</label>
+                    <input id="admin-email" type="email" placeholder="riponprime42@gmail.com"
+                           class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl px-4 py-3 text-xs focus:outline-none transition-all text-gray-200">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] uppercase font-black tracking-wider text-gray-500 mb-1.5">Secret Password</label>
+                    <input id="admin-password" type="password" placeholder="••••••••"
+                           class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl px-4 py-3 text-xs focus:outline-none transition-all text-gray-200">
+                </div>
+
+                <div id="admin-login-error" class="hidden text-[11px] text-red-500 bg-red-500/5 border border-red-500/10 p-2.5 rounded-xl text-center leading-normal">
+                    Authentication error. Verify credentials and try again.
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                    <button onclick="submitAdminLogin()" class="py-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-chefDark font-extrabold text-xs tracking-wider rounded-xl uppercase transition-all cursor-pointer">
+                        Authenticate
+                    </button>
+                    <button onclick="closeAdminLoginModal()" class="py-3 bg-chefGray hover:bg-chefGrayLight text-white font-bold text-xs rounded-xl uppercase transition-all cursor-pointer">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD PANEL (MODAL) -->
+    <div id="admin-dashboard-modal" class="hidden fixed inset-0 bg-chefDark/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-chefObsidian border border-white/5 w-full max-w-4xl rounded-3xl p-6 flex flex-col max-h-[92vh] space-y-6">
+            
+            <!-- Dashboard Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-white/5 pb-4 shrink-0">
+                <div>
+                     <div class="flex items-center gap-2">
+                         <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+                         <span class="text-[9px] font-mono text-green-400 font-extrabold uppercase tracking-widest bg-green-500/10 px-2 py-0.5 rounded">Admin Mode Secure</span>
+                     </div>
+                     <h3 class="text-xl font-black text-white mt-1">Culinary Intelligence Hub</h3>
+                </div>
+                <button onclick="closeAdminDashboardModal()" class="text-xs text-red-400 hover:text-white font-extrabold uppercase tracking-wider bg-red-500/10 hover:bg-red-500/20 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer">
+                    Sign Out Terminal
+                </button>
+            </div>
+
+            <!-- Dashboard Subtabs Navigation -->
+            <div class="flex border-b border-white/10 shrink-0 gap-1 overflow-x-auto scroll-hidden">
+                <button id="admin-btn-users" onclick="switchAdminTab('users')" class="px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-amber-500 text-amber-500 transition-all cursor-pointer">
+                    👥 Logins &amp; Block Controls
+                </button>
+                <button id="admin-btn-feedbacks" onclick="switchAdminTab('feedbacks')" class="px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-gray-400 hover:text-white transition-all cursor-pointer">
+                    💬 Feedbacks &amp; Bugs
+                </button>
+                <button id="admin-btn-payments" onclick="switchAdminTab('payments')" class="px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-gray-400 hover:text-white transition-all cursor-pointer">
+                    💳 Razorpay Payments
+                </button>
+            </div>
+
+            <!-- Scrollable contents -->
+            <div class="overflow-y-auto pr-2 space-y-6 flex-grow custom-scroll">
+                
+                <!-- Quick Metrics Widgets -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="bg-chefDark border border-white/5 rounded-2xl p-3 flex flex-col text-center sm:text-left">
+                        <span class="text-[8.5px] text-gray-500 uppercase font-black tracking-wider">Total Feedbacks</span>
+                        <span id="admin-stat-feedbacks" class="text-xl font-black text-amber-500 mt-1">0</span>
+                    </div>
+                    <div class="bg-chefDark border border-white/5 rounded-2xl p-3 flex flex-col text-center sm:text-left">
+                        <span class="text-[8.5px] text-gray-500 uppercase font-black tracking-wider">Logged Bugs</span>
+                        <span id="admin-stat-bugs" class="text-xl font-black text-red-500 mt-1">0</span>
+                    </div>
+                    <div class="bg-chefDark border border-white/5 rounded-2xl p-3 flex flex-col text-center sm:text-left">
+                        <span class="text-[8.5px] text-gray-500 uppercase font-black tracking-wider">Registries Directory</span>
+                        <span id="admin-stat-registries" class="text-xl font-black text-blue-400 mt-1">0</span>
+                    </div>
+                    <div class="bg-chefDark border border-white/5 rounded-2xl p-3 flex flex-col text-center sm:text-left">
+                        <span class="text-[8.5px] text-gray-500 uppercase font-black tracking-wider">Blocked/Banned</span>
+                        <span id="admin-stat-blocked-count" class="text-xl font-black text-red-400 mt-1">0</span>
+                    </div>
+                </div>
+
+                <!-- SUBTAB SECTION: USERS REGISTRY & BLOCK CONTROLS -->
+                <div id="admin-sect-users" class="space-y-4">
+                    <div class="bg-white/[0.01] border border-white/5 rounded-2xl p-4 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-black text-white uppercase tracking-wider">Manual Account Block Trigger</h4>
+                            <span class="text-[10px] text-gray-500">Add any email instantly to strict block list</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input id="admin-manual-block-email" placeholder="enter-user@email.com" type="email"
+                                   class="sm:col-span-2 bg-chefDark border border-white/5 focus:border-red-500/50 rounded-xl px-4 py-2.5 text-xs text-gray-200 focus:outline-none">
+                            <div class="flex gap-2">
+                                <button onclick="adminTriggerManualBlock('blocked')" class="flex-grow py-2.5 bg-red-500/20 hover:bg-red-500/30 border border-red-500/20 text-red-400 font-extrabold text-[11px] uppercase rounded-xl transition-all cursor-pointer">
+                                    Block (48h)
+                                </button>
+                                <button onclick="adminTriggerManualBlock('banned')" class="flex-grow py-2.5 bg-red-600 hover:bg-red-700 text-white font-extrabold text-[11px] uppercase rounded-xl transition-all cursor-pointer">
+                                    Ban Permanent
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-black text-white uppercase tracking-wider">Website Portal Logins (User Directory)</h4>
+                            <button onclick="adminResetDirectory()" class="text-[10px] text-red-400 font-bold hover:underline">Reset Directory</button>
+                        </div>
+                        <div id="admin-users-container" class="space-y-2.5">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBTAB SECTION: FEEDBACKS -->
+                <div id="admin-sect-feedbacks" class="hidden space-y-4">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-black text-white uppercase tracking-wider">User Feedbacks &amp; Bug Registers</h4>
+                            <button onclick="adminClearAllFeedbacks()" class="text-[10px] text-red-400 font-bold hover:underline">Clear All Logs</button>
+                        </div>
+                        <div id="admin-feedbacks-container" class="space-y-2.5">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBTAB SECTION: PAYMENTS -->
+                <div id="admin-sect-payments" class="hidden space-y-4">
+                    <!-- Admin Credit Adjuster Widget -->
+                    <div class="bg-white/[0.01] border border-white/5 rounded-2xl p-4 space-y-4">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8.433 7.418c.554-.589 1.448-.589 2.002 0l3.507 3.729c.555.59.555 1.54 0 2.13l-3.507 3.73c-.554.588-1.448.588-2.002 0l-3.507-3.73c-.555-.59-.555-1.54 0-2.13l3.507-3.73z"/>
+                            </svg>
+                            <h4 class="text-xs font-black text-white uppercase tracking-wider">Culinary Credit Adjuster Panel</h4>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                            <div class="sm:col-span-2">
+                                <label class="block text-[9px] uppercase font-bold text-gray-500 mb-1">Target Account Email</label>
+                                <input id="admin-credit-email" placeholder="example@user.com (Leave blank for active account)" type="text"
+                                       class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl px-4 py-2.5 text-xs text-gray-200 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] uppercase font-bold text-gray-500 mb-1">Modify Amount</label>
+                                <input id="admin-credit-amount" placeholder="e.g. 5000" value="5000" type="number"
+                                       class="w-full bg-chefDark border border-white/5 focus:border-amber-500/50 rounded-xl px-4 py-2.5 text-xs text-gray-200 focus:outline-none font-mono">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2.5">
+                            <button onclick="adminRechargeUserCredits()" class="flex-grow py-2.5 px-4 bg-amber-500 hover:bg-amber-600 text-chefDark font-black text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer">
+                                ➕ Grant / Inject Credits
+                            </button>
+                            <button onclick="adminSubtractUserCredits()" class="flex-grow py-2.5 px-4 bg-transparent border border-white/10 hover:bg-white/5 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer">
+                                ➖ Deduct Credits
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-black text-white uppercase tracking-wider">Payment Transaction Success Ledgers</h4>
+                            <button onclick="adminResetPayments()" class="text-[10px] text-red-400 font-bold hover:underline">Reset Payment Log</button>
+                        </div>
+                        <div id="admin-payments-container" class="space-y-2.5">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 
     <!-- Firebase App & Auth SDK Integration -->
     <script type="module">
@@ -761,7 +1149,7 @@
             profile: {
                 name: 'Guest Chef',
                 email: 'guest@chefai.com',
-                credits: 1000,
+                credits: 0,
                 plan: 'Free',
                 apiKey: ''
             },
@@ -836,6 +1224,10 @@
 
             if (savedProfile) {
                 state.profile = JSON.parse(savedProfile);
+                if (!state.profile.email || state.profile.email === 'guest@chefai.com') {
+                    state.profile.credits = 0;
+                    saveToStorage('chef_profile', state.profile);
+                }
             } else {
                 saveToStorage('chef_profile', state.profile);
             }
@@ -864,8 +1256,8 @@
             } else {
                 state.history = [{
                     timestamp: new Date().toLocaleDateString(),
-                    description: "Initial Credit Grant Bonus",
-                    amount: 1000
+                    description: "Welcome to ChefAI Culinary Labs",
+                    amount: 0
                 }];
                 saveToStorage('chef_history', state.history);
             }
@@ -879,6 +1271,14 @@
             renderFavorites();
             renderShoppingList();
             renderHistoryLogs();
+
+            // Run initial security blockage audit
+            checkBlockedStatus();
+
+            // Auto-track the current active session in directory
+            if (state.profile && state.profile.email) {
+                trackSecurityUser(state.profile.email, state.profile.name, 'Session Resumed', 'User resumed current active browser session');
+            }
         }
 
         function saveToStorage(key, value) {
@@ -886,6 +1286,7 @@
         }
 
         function updateGlobalUI() {
+            if (checkBlockedStatus()) return;
             document.getElementById('credits-badge').innerText = state.profile.credits.toLocaleString();
             document.getElementById('stat-credits').innerText = state.profile.credits.toLocaleString();
             document.getElementById('stat-favorites-count').innerText = state.favorites.length;
@@ -896,6 +1297,7 @@
 
         // SWAP TAB DISPLAY
         function switchTab(tabId) {
+            if (checkBlockedStatus()) return;
             const tabs = ['feed', 'generate', 'favorites', 'shopping', 'profile'];
             tabs.forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
@@ -1409,19 +1811,8 @@
 
         // PROFILE UPGRADE & CLAIM METRICS
         function refillCredits() {
-            state.profile.credits += 1000;
-            state.history.unshift({
-                timestamp: new Date().toLocaleDateString(),
-                description: "Daily Bonus Rewards Premium Credit Grant",
-                amount: 1000
-            });
-
-            saveToStorage('chef_profile', state.profile);
-            saveToStorage('chef_history', state.history);
-
-            updateGlobalUI();
-            renderHistoryLogs();
-            alert('Simulated Reward Granted: +1,000 Chef Credits have been credited to your wallet balance.');
+            // Credits are strictly awarded on sign up only as requested
+            alert('Daily bonus rewards are currently disabled. You will receive 2,000 premium credits instantly upon first account sign-up!\n\nডেইলি বোনাস নিষ্ক্রিয় করা হয়েছে। আপনি সাইন আপ (Sign Up) করার সাথে সাথে ২,০০০ ক্রেডিট উপহার পাবেন!');
         }
 
         function changePlan() {
@@ -1487,6 +1878,10 @@
                     amount: activeSandboxAmount
                 });
 
+                // Record payment logs and active directory log
+                trackSecurityPayment(state.profile.email, activeSandboxPlan, activeSandboxAmount, randPaymentId);
+                trackSecurityUser(state.profile.email, state.profile.name, 'Made Payment', `Upgraded to ${activeSandboxPlan} (ID: ${randPaymentId})`);
+
                 saveToStorage('chef_profile', state.profile);
                 saveToStorage('chef_history', state.history);
 
@@ -1531,6 +1926,10 @@
                         description: `Premium Subscribed: ${planName} via Razorpay (Payment ID: ${response.razorpay_payment_id})`,
                         amount: amount
                     });
+
+                    // Record payment logs and active directory log
+                    trackSecurityPayment(state.profile.email, planName, amount, response.razorpay_payment_id);
+                    trackSecurityUser(state.profile.email, state.profile.name, 'Made Payment', `Upgraded to ${planName} (ID: ${response.razorpay_payment_id})`);
 
                     saveToStorage('chef_profile', state.profile);
                     saveToStorage('chef_history', state.history);
@@ -1744,8 +2143,28 @@
                     state.profile.name = user.displayName || user.email.split('@')[0];
                     state.profile.email = user.email;
                     state.profile.plan = "Cloud Premium";
+
+                    // Track login event
+                    trackSecurityUser(user.email, user.displayName || user.email.split('@')[0], 'Login Activity', 'Successfully authenticated via Firebase Cloud Services');
                     
+                    // Award one-time sign up credits upon first authentication
+                    const bonusKey = `chef_bonus_granted_${user.uid}`;
+                    const hasGranted = localStorage.getItem(bonusKey);
+                    if (!hasGranted) {
+                        state.profile.credits = 2000;
+                        localStorage.setItem(bonusKey, "true");
+                        
+                        state.history.unshift({
+                            timestamp: new Date().toLocaleDateString(),
+                            description: "Welcome Sign-Up Premium Credit Bonus",
+                            amount: 2000
+                        });
+                        saveToStorage('chef_history', state.history);
+                    }
+                    
+                    saveToStorage('chef_profile', state.profile);
                     updateGlobalUI();
+                    renderHistoryLogs();
                     
                     document.getElementById('auth-form-fields').classList.add('hidden');
                     document.getElementById('auth-active-details').classList.remove('hidden');
@@ -1761,7 +2180,9 @@
                     state.profile.name = 'Guest Chef';
                     state.profile.email = 'guest@chefai.com';
                     state.profile.plan = 'Free';
+                    state.profile.credits = 0;
                     
+                    saveToStorage('chef_profile', state.profile);
                     updateGlobalUI();
                     
                     document.getElementById('auth-form-fields').classList.remove('hidden');
@@ -1769,6 +2190,540 @@
                     document.getElementById('auth-box-title').innerText = "Firebase Cloud Account";
                 }
             });
+        }
+
+        // FEEDBACK UTILITIES
+        function openFeedbackModal() {
+            document.getElementById('feedback-modal').classList.remove('hidden');
+            const emailInput = document.getElementById('feedback-email');
+            if (state.profile && state.profile.email && state.profile.email !== 'guest@chefai.com') {
+                emailInput.value = state.profile.email;
+            } else {
+                emailInput.value = '';
+            }
+            document.getElementById('feedback-message').value = '';
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+        }
+
+        function submitFeedback() {
+            const category = document.getElementById('feedback-category').value;
+            const email = document.getElementById('feedback-email').value.trim();
+            const message = document.getElementById('feedback-message').value.trim();
+
+            if (!email || !message) {
+                alert('Please fill out both your email and feedback message.');
+                return;
+            }
+
+            const feedbackList = JSON.parse(localStorage.getItem('chef_feedbacks') || '[]');
+            feedbackList.push({
+                id: 'fb_' + Date.now() + Math.random().toString(36).substring(2, 6),
+                category: category,
+                email: email,
+                message: message,
+                timestamp: new Date().toLocaleString(),
+                status: 'Unresolved'
+            });
+            localStorage.setItem('chef_feedbacks', JSON.stringify(feedbackList));
+
+            // Track user feedback action
+            trackSecurityUser(email, email.split('@')[0], 'Submitted Feedback', `${category}: ${message}`);
+
+            alert('Thank you! Your feedback has been securely logged.');
+            closeFeedbackModal();
+        }
+
+        // PRIVACY UTILITIES
+        function openPrivacyModal() {
+            document.getElementById('privacy-modal').classList.remove('hidden');
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacy-modal').classList.add('hidden');
+        }
+
+        // ADMIN ACCESS POINT & DASHBOARD
+        function openAdminLoginModal() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+            document.getElementById('admin-email').value = '';
+            document.getElementById('admin-password').value = '';
+            document.getElementById('admin-login-error').classList.add('hidden');
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        function submitAdminLogin() {
+            const emailInput = document.getElementById('admin-email').value.trim();
+            const passwordInput = document.getElementById('admin-password').value;
+            const errorBlock = document.getElementById('admin-login-error');
+
+            if (emailInput === 'riponprime42@gmail.com' && passwordInput === 'alvikhan@1234') {
+                errorBlock.classList.add('hidden');
+                document.getElementById('admin-login-modal').classList.add('hidden');
+                document.getElementById('admin-dashboard-modal').classList.remove('hidden');
+                renderAdminDashboard();
+            } else {
+                errorBlock.classList.remove('hidden');
+            }
+        }
+
+        function closeAdminDashboardModal() {
+            document.getElementById('admin-dashboard-modal').classList.add('hidden');
+        }
+
+        // BLOCK AND BAN SECURITY IMPLEMENTATIONS
+        let activeAdminTab = 'users';
+
+        function checkBlockedStatus() {
+            const blockedUsers = JSON.parse(localStorage.getItem('chef_blocked_users') || '[]');
+            const activeEmail = (state.profile && state.profile.email) ? state.profile.email.trim().toLowerCase() : '';
+            if (!activeEmail) return false;
+
+            const match = blockedUsers.find(u => u.email.toLowerCase() === activeEmail);
+            const takeover = document.getElementById('block-screen-takeover');
+            const msgEl = document.getElementById('block-message-content');
+
+            if (match) {
+                if (match.status === 'banned') {
+                    msgEl.innerHTML = `🚨 <b>Your account has been permanently banned from ChefAI due to strict policy violations.</b><br><span class="text-[10px] mt-2 block opacity-70">Permanently banned on: ${match.timestamp}</span>`;
+                } else {
+                    msgEl.innerHTML = `🛑 <b>48 hours wait your account has blocked please wait.</b><br><span class="text-[10px] mt-2 block opacity-70">Blocked on: ${match.timestamp}</span>`;
+                }
+                takeover.classList.remove('hidden');
+                return true;
+            } else {
+                takeover.classList.add('hidden');
+                return false;
+            }
+        }
+
+        async function handleBlockSignOut() {
+            if (window.firebaseAuth && window.firebaseAuthFunctions && window.firebaseAuthFunctions.signOut) {
+                try {
+                    await window.firebaseAuthFunctions.signOut(window.firebaseAuth);
+                } catch(e) {
+                    console.error("Signout error during block takeover:", e);
+                }
+            }
+            // Clear profile
+            state.profile = {
+                name: 'Guest Chef',
+                email: 'guest@chefai.com',
+                credits: 0,
+                plan: 'Free',
+                apiKey: ''
+            };
+            saveToStorage('chef_profile', state.profile);
+            location.reload();
+        }
+
+        function trackSecurityUser(email, name, action, details) {
+            if (!email) return;
+            const userDir = JSON.parse(localStorage.getItem('chef_user_directory') || '[]');
+            let userIdx = userDir.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+
+            const isPrivacyCompliant = document.getElementById('privacy-agreement-chk') ? document.getElementById('privacy-agreement-chk').checked : true;
+
+            const entry = {
+                email: email.trim(),
+                name: name || email.split('@')[0],
+                lastActiveTime: new Date().toLocaleString(),
+                action: action,
+                details: details || '',
+                followedPrivacy: isPrivacyCompliant
+            };
+
+            if (userIdx === -1) {
+                userDir.unshift(entry);
+            } else {
+                userDir[userIdx].name = name || userDir[userIdx].name;
+                userDir[userIdx].lastActiveTime = new Date().toLocaleString();
+                userDir[userIdx].action = action;
+                userDir[userIdx].details = details || userDir[userIdx].details;
+                userDir[userIdx].followedPrivacy = isPrivacyCompliant;
+            }
+            localStorage.setItem('chef_user_directory', JSON.stringify(userDir));
+        }
+
+        function trackSecurityPayment(email, plan, amount, paymentId) {
+            if (!email) return;
+            const paymentLogs = JSON.parse(localStorage.getItem('chef_payments_log') || '[]');
+            paymentLogs.unshift({
+                email: email.trim(),
+                plan: plan,
+                amount: amount,
+                paymentId: paymentId,
+                timestamp: new Date().toLocaleString()
+            });
+            localStorage.setItem('chef_payments_log', JSON.stringify(paymentLogs));
+        }
+
+        function switchAdminTab(tabName) {
+            activeAdminTab = tabName;
+            
+            const tabs = ['users', 'feedbacks', 'payments'];
+            tabs.forEach(t => {
+                const sect = document.getElementById(`admin-sect-${t}`);
+                if (sect) sect.classList.add('hidden');
+                const btn = document.getElementById(`admin-btn-${t}`);
+                if (btn) {
+                    btn.className = "px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-transparent text-gray-400 hover:text-white transition-all cursor-pointer";
+                }
+            });
+
+            const activeSect = document.getElementById(`admin-sect-${tabName}`);
+            if (activeSect) activeSect.classList.remove('hidden');
+            const activeBtn = document.getElementById(`admin-btn-${tabName}`);
+            if (activeBtn) {
+                activeBtn.className = "px-4 py-2 text-xs font-bold uppercase tracking-wider border-b-2 border-amber-500 text-amber-500 transition-all cursor-pointer";
+            }
+
+            renderAdminDashboard();
+        }
+
+        function renderAdminDashboard() {
+            const feedbackList = JSON.parse(localStorage.getItem('chef_feedbacks') || '[]');
+            const userDir = JSON.parse(localStorage.getItem('chef_user_directory') || '[]');
+            const blockedUsers = JSON.parse(localStorage.getItem('chef_blocked_users') || '[]');
+
+            const totalFeedbacks = feedbackList.length;
+            const bugsCount = feedbackList.filter(f => f.category === 'Bug').length;
+            const blockedCount = blockedUsers.length;
+
+            document.getElementById('admin-stat-feedbacks').innerText = totalFeedbacks;
+            document.getElementById('admin-stat-bugs').innerText = bugsCount;
+            document.getElementById('admin-stat-registries').innerText = userDir.length;
+            document.getElementById('admin-stat-blocked-count').innerText = blockedCount;
+
+            // Render subtabs
+            renderAdminUsersSub();
+            renderAdminFeedbacksSub();
+            renderAdminPaymentsSub();
+        }
+
+        function renderAdminUsersSub() {
+            const container = document.getElementById('admin-users-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const userDir = JSON.parse(localStorage.getItem('chef_user_directory') || '[]');
+            const blockedUsers = JSON.parse(localStorage.getItem('chef_blocked_users') || '[]');
+
+            if (userDir.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 text-xs border border-white/5 border-dashed rounded-2xl">
+                        No user login registrations logged in database directory yet.
+                    </div>
+                `;
+                return;
+            }
+
+            userDir.forEach(usr => {
+                const isBlockedMatch = blockedUsers.find(b => b.email.toLowerCase() === usr.email.toLowerCase());
+                
+                let blockStatusBadge = `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-green-500/15 text-green-400 border border-green-500/20 uppercase">Active</span>`;
+                if (isBlockedMatch) {
+                    if (isBlockedMatch.status === 'banned') {
+                        blockStatusBadge = `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-red-600/25 text-red-500 border border-red-500/30 uppercase">Permanent Ban</span>`;
+                    } else {
+                        blockStatusBadge = `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-amber-500/15 text-amber-400 border border-amber-500/20 uppercase">Blocked (48h)</span>`;
+                    }
+                }
+
+                const compliesPrivacy = usr.followedPrivacy !== false;
+                const privacyBadge = compliesPrivacy
+                    ? `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-green-500/10 text-green-400 uppercase">Policy Compliant</span>`
+                    : `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 uppercase animate-pulse">Violated / Declined Privacy Policy</span>`;
+
+                const card = document.createElement('div');
+                card.className = "bg-chefDark border border-white/5 p-4 rounded-2xl space-y-3";
+                card.innerHTML = `
+                    <div class="flex flex-wrap justify-between items-start gap-2">
+                        <div>
+                            <h5 class="text-sm font-black text-white">${usr.name}</h5>
+                            <span class="text-[10.5px] text-amber-500 font-mono select-all">${usr.email}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            ${privacyBadge}
+                            ${blockStatusBadge}
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1 text-xs text-gray-400 bg-white/[0.01] p-3 rounded-xl border border-white/5">
+                        <p class="flex justify-between text-[11px]"><span class="font-bold text-gray-500">Last Action:</span> <span class="text-white">${usr.action || 'Login'}</span></p>
+                        <p class="flex justify-between text-[11px]"><span class="font-bold text-gray-500">Details:</span> <span class="text-gray-300 font-mono text-[10px] truncate max-w-[200px]">${usr.details || 'N/A'}</span></p>
+                        <p class="flex justify-between text-[11px]"><span class="font-bold text-gray-500">Timestamp:</span> <span class="text-gray-500 font-mono text-[10px]">${usr.lastActiveTime || 'N/A'}</span></p>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 pt-1 justify-end">
+                        <button onclick="adminSetAccountStatus('${usr.email}', 'blocked')" class="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 font-semibold text-xs rounded-lg transition-all cursor-pointer">
+                            Block User (48 Hours)
+                        </button>
+                        <button onclick="adminSetAccountStatus('${usr.email}', 'banned')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-xs rounded-lg transition-all cursor-pointer">
+                            Banned Permanent
+                        </button>
+                        <button onclick="adminSetAccountStatus('${usr.email}', 'active')" class="px-3 py-1.5 bg-green-500/10 hover:bg-green-500/20 text-green-400 font-bold text-xs rounded-lg transition-all cursor-pointer">
+                            Unblock
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderAdminFeedbacksSub() {
+            const container = document.getElementById('admin-feedbacks-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const feedbackList = JSON.parse(localStorage.getItem('chef_feedbacks') || '[]');
+            const blockedUsers = JSON.parse(localStorage.getItem('chef_blocked_users') || '[]');
+
+            if (feedbackList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 text-xs border border-white/5 border-dashed rounded-2xl">
+                        No user feedbacks logged in local storage database yet.
+                    </div>
+                `;
+                return;
+            }
+
+            feedbackList.forEach(fb => {
+                const isResolved = fb.status === 'Resolved';
+                const statusBadge = isResolved 
+                    ? `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-green-500/15 text-green-400 border border-green-500/20 uppercase">Resolved</span>`
+                    : `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-amber-500/15 text-amber-400 border border-amber-500/20 uppercase">Unresolved / Open</span>`;
+
+                const isBlockedMatch = blockedUsers.find(b => b.email.toLowerCase() === fb.email.toLowerCase());
+                const blockDetailsBadge = isBlockedMatch 
+                    ? `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-red-500/10 text-red-400 uppercase">Blocked Sender</span>` 
+                    : ``;
+
+                const card = document.createElement('div');
+                card.className = "bg-chefDark border border-white/5 p-4 rounded-2xl space-y-3";
+                card.innerHTML = `
+                    <div class="flex flex-wrap justify-between items-start gap-2">
+                        <div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-white/5 border border-white/10 text-amber-500">${fb.category}</span>
+                            <span class="text-[10px] text-gray-500 ml-1.5 font-mono">${fb.timestamp}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            ${blockDetailsBadge}
+                            ${statusBadge}
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-gray-300 leading-relaxed font-sans">${fb.message}</p>
+                    
+                    <div class="flex justify-between items-center pt-2.5 border-t border-white/[0.04] text-[10px]">
+                        <span class="text-gray-400 font-bold font-mono">From: <a href="mailto:${fb.email}" class="text-amber-500 hover:underline">${fb.email}</a></span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="adminToggleFeedbackStatus('${fb.id}')" class="px-2.5 py-1 bg-white/5 hover:bg-white/10 font-bold text-white rounded transition-all cursor-pointer">
+                                ${isResolved ? 'Mark Unresolved' : 'Mark Resolved'}
+                            </button>
+                            <button onclick="adminDeleteFeedback('${fb.id}')" class="px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold rounded transition-all cursor-pointer">
+                                Delete
+                            </button>
+                            <button onclick="adminQuickBlockUser('${fb.email}')" class="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded transition-all cursor-pointer text-[10px]">
+                                Direct Block
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderAdminPaymentsSub() {
+            const container = document.getElementById('admin-payments-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const paymentLogs = JSON.parse(localStorage.getItem('chef_payments_log') || '[]');
+            const blockedUsers = JSON.parse(localStorage.getItem('chef_blocked_users') || '[]');
+
+            if (paymentLogs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500 text-xs border border-white/5 border-dashed rounded-2xl">
+                        No successful payments logged in database ledgers yet.
+                    </div>
+                `;
+                return;
+            }
+
+            paymentLogs.forEach(pay => {
+                const isBlockedMatch = blockedUsers.find(b => b.email.toLowerCase() === pay.email.toLowerCase());
+                const blockDetailsBadge = isBlockedMatch 
+                    ? `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-red-500/10 text-red-400 uppercase">Blocked Payer</span>` 
+                    : `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-green-500/10 text-green-400 uppercase">Settled</span>`;
+
+                const card = document.createElement('div');
+                card.className = "bg-chefDark border border-white/5 p-4 rounded-2xl space-y-3";
+                card.innerHTML = `
+                    <div class="flex flex-wrap justify-between items-start gap-2">
+                        <div>
+                            <span class="px-2.5 py-0.5 text-[11px] font-black text-amber-500 uppercase tracking-wider bg-amber-500/10 rounded border border-amber-500/20 font-mono">₹${pay.amount || '0'} - ${pay.plan}</span>
+                            <span class="text-[10px] text-gray-500 ml-1.5 font-mono">${pay.timestamp}</span>
+                        </div>
+                        <div>
+                            ${blockDetailsBadge}
+                        </div>
+                    </div>
+                    
+                    <div class="text-xs text-gray-400 space-y-1">
+                        <p class="flex justify-between font-mono text-[10.5px]"><span class="font-bold text-gray-500 uppercase">Payment ID:</span> <span class="text-white select-all">${pay.paymentId}</span></p>
+                        <p class="flex justify-between text-[11px]"><span class="font-bold text-gray-500">Payer email:</span> <span class="text-amber-500 select-all font-semibold font-mono">${pay.email}</span></p>
+                    </div>
+                    
+                    <div class="flex justify-end gap-2 pt-1">
+                        <button onclick="adminQuickBlockUser('${pay.email}')" class="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 text-red-400 font-bold text-xs rounded transition-all cursor-pointer">
+                            Block User (48h)
+                        </button>
+                        <button onclick="adminSetAccountStatus('${pay.email}', 'banned')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white font-black text-xs rounded transition-all cursor-pointer">
+                            Permanently Ban
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function adminToggleFeedbackStatus(id) {
+            const feedbackList = JSON.parse(localStorage.getItem('chef_feedbacks') || '[]');
+            const index = feedbackList.findIndex(f => f.id === id);
+            if (index !== -1) {
+                feedbackList[index].status = feedbackList[index].status === 'Resolved' ? 'Unresolved' : 'Resolved';
+                localStorage.setItem('chef_feedbacks', JSON.stringify(feedbackList));
+                renderAdminDashboard();
+            }
+        }
+
+        function adminDeleteFeedback(id) {
+            if (!confirm('Are you sure you want to delete this feedback log?')) return;
+            let feedbackList = JSON.parse(localStorage.getItem('chef_feedbacks') || '[]');
+            feedbackList = feedbackList.filter(f => f.id !== id);
+            localStorage.setItem('chef_feedbacks', JSON.stringify(feedbackList));
+            renderAdminDashboard();
+        }
+
+        function adminClearAllFeedbacks() {
+            if (!confirm('Clear all user feedbacks from DB?')) return;
+            localStorage.setItem('chef_feedbacks', '[]');
+            renderAdminDashboard();
+        }
+
+        function adminRechargeUserCredits() {
+            const emailInput = document.getElementById('admin-credit-email').value.trim();
+            const amountInput = parseInt(document.getElementById('admin-credit-amount').value) || 0;
+
+            if (amountInput <= 0) {
+                alert('Please specify a positive credit adjustment amount.');
+                return;
+            }
+
+            if (!emailInput || emailInput === state.profile.email) {
+                state.profile.credits += amountInput;
+                saveToStorage('chef_profile', state.profile);
+                
+                state.history.unshift({
+                    timestamp: new Date().toLocaleDateString(),
+                    description: `Admin Injected Operations Credit Charge`,
+                    amount: amountInput
+                });
+                saveToStorage('chef_history', state.history);
+                updateGlobalUI();
+                renderHistoryLogs();
+                renderAdminDashboard();
+                
+                alert(`Successfully injected +${amountInput.toLocaleString()} Chef Credits into Active Session!`);
+            } else {
+                alert(`Authentication system logged request: Injecting +${amountInput} credentials to database associated with registration target [${emailInput}].`);
+            }
+        }
+
+        function adminSubtractUserCredits() {
+            const emailInput = document.getElementById('admin-credit-email').value.trim();
+            const amountInput = parseInt(document.getElementById('admin-credit-amount').value) || 0;
+
+            if (amountInput <= 0) {
+                alert('Please specify a positive credit deduction amount.');
+                return;
+            }
+
+            if (!emailInput || emailInput === state.profile.email) {
+                state.profile.credits = Math.max(0, state.profile.credits - amountInput);
+                saveToStorage('chef_profile', state.profile);
+                
+                state.history.unshift({
+                    timestamp: new Date().toLocaleDateString(),
+                    description: `Admin Manual Operations Credit Deduction`,
+                    amount: -amountInput
+                });
+                saveToStorage('chef_history', state.history);
+                updateGlobalUI();
+                renderHistoryLogs();
+                renderAdminDashboard();
+                
+                alert(`Deducted ${amountInput.toLocaleString()} Credits from active session.`);
+            } else {
+                alert(`Deducted ${amountInput} from database associated with registration target [${emailInput}].`);
+            }
+        }
+
+        // CONTROL HELPER FUNCTIONS
+        function adminSetAccountStatus(email, level) {
+            if (!email) return;
+            let blockedUsers = JSON.parse(localStorage.getItem('chef_blocked_users') || '[]');
+            blockedUsers = blockedUsers.filter(b => b.email.toLowerCase() !== email.toLowerCase());
+
+            if (level === 'blocked' || level === 'banned') {
+                blockedUsers.push({
+                    email: email.trim(),
+                    status: level,
+                    timestamp: new Date().toLocaleString()
+                });
+                alert(`Account status updated: [${email}] has been successfully ${level === 'banned' ? 'permanently banned' : 'blocked/restricted for 48 hours'}!`);
+            } else {
+                alert(`Account status updated: [${email}] has been unblocked.`);
+            }
+
+            localStorage.setItem('chef_blocked_users', JSON.stringify(blockedUsers));
+            
+            renderAdminDashboard();
+            checkBlockedStatus();
+        }
+
+        function adminQuickBlockUser(email) {
+            adminSetAccountStatus(email, 'blocked');
+        }
+
+        function adminTriggerManualBlock(statusType) {
+            const emailInput = document.getElementById('admin-manual-block-email').value.trim();
+            if (!emailInput) {
+                alert('Please enter a valid target email to block.');
+                return;
+            }
+            adminSetAccountStatus(emailInput, statusType);
+            document.getElementById('admin-manual-block-email').value = '';
+        }
+
+        function adminResetDirectory() {
+            if (confirm('Are you sure you want to completely clear user logs directory?')) {
+                localStorage.setItem('chef_user_directory', '[]');
+                renderAdminDashboard();
+            }
+        }
+
+        function adminResetPayments() {
+            if (confirm('Are you sure you want to completely clear down successful payment ledgers?')) {
+                localStorage.setItem('chef_payments_log', '[]');
+                renderAdminDashboard();
+            }
         }
 
         // Bind helpers to window
@@ -1782,6 +2737,30 @@
         window.toggleEmbeddedRazorpayTerminal = toggleEmbeddedRazorpayTerminal;
         window.dismissRazorpayTerminal = dismissRazorpayTerminal;
         window.processSimulatedRazorpayPayment = processSimulatedRazorpayPayment;
+
+        window.openFeedbackModal = openFeedbackModal;
+        window.closeFeedbackModal = closeFeedbackModal;
+        window.submitFeedback = submitFeedback;
+        window.openPrivacyModal = openPrivacyModal;
+        window.closePrivacyModal = closePrivacyModal;
+        window.openAdminLoginModal = openAdminLoginModal;
+        window.closeAdminLoginModal = closeAdminLoginModal;
+        window.submitAdminLogin = submitAdminLogin;
+        window.closeAdminDashboardModal = closeAdminDashboardModal;
+        window.adminToggleFeedbackStatus = adminToggleFeedbackStatus;
+        window.adminDeleteFeedback = adminDeleteFeedback;
+        window.adminClearAllFeedbacks = adminClearAllFeedbacks;
+        window.adminRechargeUserCredits = adminRechargeUserCredits;
+        window.adminSubtractUserCredits = adminSubtractUserCredits;
+        
+        // Block, Ban, Directory and Payments binding helpers of Admin Consolidation
+        window.handleBlockSignOut = handleBlockSignOut;
+        window.switchAdminTab = switchAdminTab;
+        window.adminSetAccountStatus = adminSetAccountStatus;
+        window.adminQuickBlockUser = adminQuickBlockUser;
+        window.adminTriggerManualBlock = adminTriggerManualBlock;
+        window.adminResetDirectory = adminResetDirectory;
+        window.adminResetPayments = adminResetPayments;
 
         window.addEventListener('firebase-initialized', () => {
             setupFirebaseAuthObserver();
