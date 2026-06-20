@@ -122,3 +122,24 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   "ksp"(libs.moshi.kotlin.codegen)
 }
+
+val buildDir = layout.buildDirectory.get().asFile
+val rDir = rootDir
+
+tasks.register("copyApkToRoot") {
+    val apkFile = buildDir.resolve("outputs/apk/debug/app-debug.apk")
+    val targetFile = rDir.resolve("chefai-debug.apk")
+    doLast {
+        if (apkFile.exists()) {
+            apkFile.copyTo(targetFile, overwrite = true)
+            println("Successfully copied APK to root as chefai-debug.apk")
+        } else {
+            println("APK file does not exist: ${apkFile.absolutePath}")
+        }
+    }
+}
+
+tasks.matching { it.name == "assembleDebug" }.configureEach {
+    finalizedBy("copyApkToRoot")
+}
+

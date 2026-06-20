@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChefAI - Your Personal AI Culinary Assistant</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        chefDark: '#0E0F12',
+                        chefDarker: '#08090B',
+                        chefAmber: '#F59E0B',
+                        chefAmberHover: '#D97706',
+                        chefGray: '#1C1E24',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0E0F12;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top, rgba(245, 158, 11, 0.15) 0%, rgba(14, 15, 18, 0) 60%);
+        }
+    </style>
+</head>
+<body class="text-gray-200 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Top Glow Effect -->
+    <div class="absolute top-0 left-0 right-0 h-[500px] hero-gradient pointer-events-none z-0"></div>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-5xl mx-auto px-6 py-12 md:py-24 flex-grow flex flex-col justify-center items-center">
+        
+        <!-- Header / Logo -->
+        <div class="flex items-center gap-3 mb-8 md:mb-12 animate-[fadeIn_0.5s_ease-out]">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <!-- Chef Hat SVG Icon -->
+                <svg class="w-7 h-7 text-chefDark" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 1.74.64 3.32 1.69 4.54C5.1 14.39 4 15.82 4 17.5c0 1.93 1.57 3.5 3.5 3.5h9c1.93 0 3.5-1.57 3.5-3.5 0-1.68-1.1-3.11-2.69-3.96C18.36 12.32 19 10.74 19 9c0-3.87-3.13-7-7-7zm5 15.5c0 .83-.67 1.5-1.5 1.5h-9c-.83 0-1.5-.67-1.5-1.5 0-.83.67-1.5 1.5-1.5h9c.83 0 1.5.67 1.5 1.5zm-5-10c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5S9.5 11.38 9.5 10s1.12-2.5 2.5-2.5z"/>
+                </svg>
+            </div>
+            <span class="text-2xl font-extrabold tracking-tight text-white">Chef<span class="text-amber-500">AI</span></span>
+        </div>
+
+        <!-- Android Badge -->
+        <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full mb-6 shadow-sm">
+            <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.523 15.3l1.816 3.146a.5.5 0 1 1-.866.5l-1.836-3.18a10.4 10.4 0 0 1-9.274 0l-1.836 3.18a.5.5 0 0 1-.866-.5L6.477 15.3C3.655 13.518 1.8 10.457 1.8 7h20.4c0 3.457-1.855 6.518-4.677 8.3zM7 11a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+            </svg>
+            <span class="text-xs font-semibold text-amber-500 tracking-wider uppercase">Android APK Deployment Online</span>
+        </div>
+
+        <!-- Hero Content -->
+        <h1 class="text-4xl md:text-6xl font-black text-center text-white tracking-tight leading-[1.1] mb-6 max-w-3xl">
+            Savor the Art of Cooking guided by <span class="gradient-text">Instant AI Mastery</span>
+        </h1>
+        <p class="text-gray-400 text-center text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
+            Generate unlimited recipes, customize distinct AI mastermind chef personalities, and bookmark your finest creations in a native off-line Room Database.
+        </p>
+
+        <!-- Main Download Button & File Info -->
+        <div class="flex flex-col items-center gap-4 w-full max-w-sm mb-16">
+            <a href="./chefai-debug.apk" download 
+               class="w-full flex items-center justify-center gap-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-chefDark font-bold py-4 px-8 rounded-2xl shadow-xl shadow-amber-500/15 transition-all duration-200 text-lg">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                </svg>
+                Download ChefAI APK
+            </a>
+            <div class="flex items-center gap-4 text-xs text-gray-500 font-medium">
+                <span>Version 1.0 (Latest)</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
+                <span>File Size: ~35 MB</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-700"></span>
+                <span>Type: Android Package</span>
+            </div>
+        </div>
+
+        <!-- App Capabilities Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-20 text-left">
+            <div class="bg-chefGray/40 border border-white/5 p-6 rounded-2xl">
+                <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4 border border-orange-500/20">
+                    <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.3 16.2H13V19c0 .6-.4 1-1 1s-1-.4-1-1v-2.8H8.7c-.6 0-1-.4-1-1s.4-1 1-1h2.1l1.5-3.3-2.1-4.6c-.2-.4-.6-.7-1-.7H7.1l-1.5 3.3c-.2.4-.6.7-1 .7S3.6 11 3.6 11l1.5-3.3c.2-.4.6-.7 1-.7h2.1M20.4 7.5L18.9 11c-.2.4-.6.7-1 .7h-2.1l1.5-3.3c.2-.4.6-.7 1-.7h2.1z"/>
+                    </svg>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">Dual Login Modes</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Access authenticated features through secure Google or Custom Email sign-in, or use local offline modes flawlessly sync'd to your device.
+                </p>
+            </div>
+
+            <div class="bg-chefGray/40 border border-white/5 p-6 rounded-2xl">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4 border border-amber-500/20">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">Gemini AI Recipes</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Fully interactive AI generation powered directly by Google Gemini. Tailor recipes by ingredients, allergy constraints, cooking time, and gear.
+                </p>
+            </div>
+
+            <div class="bg-chefGray/40 border border-white/5 p-6 rounded-2xl">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center mb-4 border border-red-500/20">
+                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">Local SQLite Room Data</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Bookmark recipes and track dynamic, customized chef credits locally. Absolute reliability even when you lose connection mid-kitchen.
+                </p>
+            </div>
+        </div>
+
+        <!-- Easy Sideload Instructions -->
+        <div class="bg-chefGray/20 border border-white/5 rounded-3xl p-8 w-full max-w-3xl text-left">
+            <h2 class="text-2xl font-extrabold text-white mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                Android Sideloading & Installation Guide
+            </h2>
+            
+            <div class="space-y-4 text-sm md:text-base">
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-chefGray flex items-center justify-center font-bold text-amber-500 border border-white/5">1</div>
+                    <div>
+                        <h4 class="text-white font-bold mb-1">Download the APK File</h4>
+                        <p class="text-gray-400">Tap the orange button above on your Android device to download <code class="text-amber-500/90 font-mono">chefai-debug.apk</code>.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-chefGray flex items-center justify-center font-bold text-amber-500 border border-white/5">2</div>
+                    <div>
+                        <h4 class="text-white font-bold mb-1">Permit Install Source</h4>
+                        <p class="text-gray-400">If prompted by Chrome or your File Manager, enable <strong>"Allow installation from this source"</strong> in your device settings.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-chefGray flex items-center justify-center font-bold text-amber-500 border border-white/5">3</div>
+                    <div>
+                        <h4 class="text-white font-bold mb-1">Complete Installation</h4>
+                        <p class="text-gray-400">Tap the downloaded notification file and click <strong>"Install"</strong>. Your new AI cooking space is fully ready to open!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 w-full py-8 text-center text-xs text-gray-600 border-t border-white/[0.03] bg-chefDarker">
+        <p>&copy; 2026 ChefAI Android Application Platform. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
